@@ -13,12 +13,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int totalSeconds = 1500;
+  static const defaultMinutes = 25;
+  int totalMinutes = defaultMinutes;
+  int totalSeconds = defaultMinutes * 60;
+  bool isRunning = false;
+  int pmodors = 0;
   late Timer timer;
 
   void onTick(Timer timer) {
     setState(() {
       totalSeconds = totalSeconds - 1;
+      if (totalSeconds == 0) {
+        pmodors = pmodors + 1;
+        onStopPressed();
+      }
     });
   }
 
@@ -27,6 +35,29 @@ class _HomeScreenState extends State<HomeScreen> {
       const Duration(seconds: 1),
       onTick,
     );
+    setState(() {
+      isRunning = true;
+    });
+  }
+
+  void onPausePressed() {
+    timer.cancel();
+    setState(() {
+      isRunning = false;
+    });
+  }
+
+  void onStopPressed() {
+    timer.cancel();
+    setState(() {
+      isRunning = false;
+      totalSeconds = totalMinutes * 60;
+    });
+  }
+
+  String format(int seconds) {
+    var duration = Duration(seconds: seconds);
+    return duration.toString().substring(2, 7);
   }
 
   @override
@@ -40,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               alignment: Alignment.bottomCenter,
               child: Text(
-                '$totalSeconds',
+                format(totalSeconds),
                 style: TextStyle(
                   color: Theme.of(context).cardColor,
                   fontSize: 90,
@@ -52,13 +83,29 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: 3,
             child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: onStartPressed,
-                icon: const Icon(
-                  Icons.play_circle_fill_outlined,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 120,
+                    color: Theme.of(context).cardColor,
+                    onPressed: isRunning ? onPausePressed : onStartPressed,
+                    icon: Icon(
+                      isRunning
+                          ? Icons.pause_circle_outline_outlined
+                          : Icons.play_circle_fill_outlined,
+                    ),
+                  ),
+                  Visibility(
+                    visible: isRunning || totalSeconds != totalMinutes * 60,
+                    child: IconButton(
+                      iconSize: 120,
+                      color: Theme.of(context).cardColor,
+                      onPressed: onStopPressed,
+                      icon: const Icon(Icons.stop_circle_outlined),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -85,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Text(
-                          "0",
+                          '$pmodors',
                           style: TextStyle(
                             fontSize: 60,
                             fontWeight: FontWeight.w600,
