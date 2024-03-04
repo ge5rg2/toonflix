@@ -6,6 +6,7 @@ void main() {
   runApp(const App());
 }
 
+// st -> shortcut to make a StatefulWidget
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -14,41 +15,74 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int counter = 0;
+  bool hideTitle = true;
 
-  void onClicked() {
-    counter = counter + 1;
+  void onToggle() {
+    setState(() {
+      hideTitle = !hideTitle;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.amber,
+            fontSize: 40,
+          ),
+        ),
+      ),
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "Click Count",
-                style: TextStyle(
-                  fontSize: 30,
-                ),
-              ),
-              Text(
-                '$counter',
-                style: const TextStyle(
-                  fontSize: 20,
-                ),
-              ),
               IconButton(
-                iconSize: 40,
-                onPressed: onClicked,
-                icon: const Icon(Icons.plus_one_rounded),
-              )
+                onPressed: onToggle,
+                icon: const Icon(Icons.highlight_remove_rounded),
+              ),
+              hideTitle ? const Text("nothing") : const MyLargeTitle(),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MyLargeTitle extends StatefulWidget {
+  const MyLargeTitle({
+    super.key,
+  });
+
+  @override
+  State<MyLargeTitle> createState() => _MyLargeTitleState();
+}
+
+class _MyLargeTitleState extends State<MyLargeTitle> {
+  @override
+  void initState() {
+    super.initState();
+    print('init');
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('dispose');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "My Large Title",
+      style: TextStyle(
+        fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
+        color: Theme.of(context).textTheme.titleLarge?.color,
       ),
     );
   }
