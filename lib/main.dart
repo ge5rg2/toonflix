@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:toonflix/screens/home_screen.dart';
+import 'package:toonflix/services/api_service.dart';
 
 void main() {
+  ApiService().getTodaysToons();
   runApp(const App());
 }
 
@@ -16,14 +16,18 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
-          backgroundColor: const Color(0xFFE7626C),
+          backgroundColor: Colors.white,
         ),
         textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            color: Color(0xFF232B55),
-          ),
-        ),
-        cardColor: const Color(0xFFF4EDDB),
+            displayLarge: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+            titleMedium: TextStyle(
+              color: Colors.white,
+            )),
+        cardColor: Colors.green,
       ),
       home: const HomeScreen(),
     );
