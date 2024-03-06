@@ -3,7 +3,6 @@ import 'package:toonflix/screens/home_screen.dart';
 import 'package:toonflix/services/api_service.dart';
 
 void main() {
-  ApiService().getTodaysToons();
   runApp(const App());
 }
 
@@ -29,7 +28,7 @@ class App extends StatelessWidget {
             )),
         cardColor: Colors.green,
       ),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
