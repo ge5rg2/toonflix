@@ -18,14 +18,15 @@ class App extends StatelessWidget {
           backgroundColor: Colors.white,
         ),
         textTheme: const TextTheme(
-            displayLarge: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
-            titleMedium: TextStyle(
-              color: Colors.white,
-            )),
+          displayLarge: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+          titleMedium: TextStyle(
+            color: Colors.black,
+          ),
+        ),
         cardColor: Colors.green,
       ),
       home: HomeScreen(),
