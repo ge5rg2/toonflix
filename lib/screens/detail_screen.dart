@@ -26,7 +26,10 @@ class DetailScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ImageContainer(thumb: thumb),
+              ImageContainer(
+                thumb: thumb,
+                id: id,
+              ),
             ],
           )
         ],

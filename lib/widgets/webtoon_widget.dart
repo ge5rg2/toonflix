@@ -24,13 +24,16 @@ class Webtoon extends StatelessWidget {
               title: title,
               thumb: thumb,
             ),
-            fullscreenDialog: true,
+            //fullscreenDialog: true,
           ),
         );
       },
       child: (Column(
         children: [
-          ImageContainer(thumb: thumb),
+          ImageContainer(
+            thumb: thumb,
+            id: id,
+          ),
           Text(
             title,
             style: TextStyle(
