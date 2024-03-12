@@ -22,6 +22,13 @@ class _DetailScreenState extends State<DetailScreen> {
   late Future<WebtoonDetailModel> webtoon;
   late Future<List<WebtoonEpisodeModel>> episodes;
 
+  bool expand = true;
+
+  void handleOverView() {
+    expand = !expand;
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -36,61 +43,132 @@ class _DetailScreenState extends State<DetailScreen> {
         preferredSize: const Size.fromHeight(50),
         child: HeaderContainer(header: widget.title),
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Column(
             children: [
-              ImageContainer(
-                thumb: widget.thumb,
-                id: widget.id,
+              const SizedBox(
+                height: 50,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImageContainer(
+                    thumb: widget.thumb,
+                    id: widget.id,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              FutureBuilder(
+                future: webtoon,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          expand
+                              ? '${snapshot.data!.about.substring(0, 50)}...'
+                              : snapshot.data!.about,
+                          style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .fontSize),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${snapshot.data!.genre} / ${snapshot.data!.age}',
+                              style: TextStyle(
+                                  fontSize: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .fontSize),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  expand ? '펼치기' : '접기',
+                                  style: TextStyle(
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .fontSize),
+                                ),
+                                IconButton(
+                                  onPressed: handleOverView,
+                                  icon: expand
+                                      ? const Icon(
+                                          Icons.keyboard_arrow_down_outlined)
+                                      : const Icon(
+                                          Icons.keyboard_arrow_up_outlined),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        FutureBuilder(
+                          future: episodes,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return SizedBox(
+                                height:
+                                    200, // Set a fixed height or use MediaQuery to calculate dynamically
+                                child: ListWheelScrollView.useDelegate(
+                                  itemExtent: 100,
+                                  diameterRatio: 1.3,
+                                  physics: const FixedExtentScrollPhysics(),
+                                  childDelegate: ListWheelChildBuilderDelegate(
+                                    childCount: snapshot.data!.length,
+                                    builder: (context, index) {
+                                      final episode = snapshot.data![index];
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).cardColor,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 20,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(episode.title),
+                                              const Icon(
+                                                  Icons.chevron_right_outlined),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                      ],
+                    );
+                  }
+                  return const Text("...");
+                },
               ),
             ],
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          FutureBuilder(
-            future: webtoon,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        snapshot.data!.about,
-                        style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .fontSize),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        '${snapshot.data!.genre} / ${snapshot.data!.age}',
-                        style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .fontSize),
-                      )
-                    ],
-                  ),
-                );
-              }
-              return const Text("...");
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
