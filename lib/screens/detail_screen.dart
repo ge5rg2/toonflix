@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:toonflix/models/%08webtoon_detail.dart';
 import 'package:toonflix/models/webtoom_episode.dart';
 import 'package:toonflix/services/api_service.dart';
@@ -45,12 +46,9 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.all(50),
           child: Column(
             children: [
-              const SizedBox(
-                height: 50,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -120,6 +118,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           height: 25,
                         ),
                         FutureBuilder(
+                          // Todo- 스켈레톤 UI
                           future: episodes,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -135,19 +134,66 @@ class _DetailScreenState extends State<DetailScreen> {
                                     builder: (context, index) {
                                       final episode = snapshot.data![index];
                                       return Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 4),
                                         decoration: BoxDecoration(
-                                          color: Theme.of(context).cardColor,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 5,
+                                                offset: const Offset(1, 3),
+                                                color: Colors.black
+                                                    .withOpacity(0.3)),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                            color: Theme.of(context).cardColor,
+                                          ),
+                                          color: Theme.of(context).canvasColor,
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 10,
-                                            horizontal: 20,
+                                            horizontal: 10,
                                           ),
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(episode.title),
-                                              const Icon(
-                                                  Icons.chevron_right_outlined),
+                                              Container(
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                width: 120,
+                                                child: Image.network(
+                                                  episode.thumb,
+                                                  headers: const {
+                                                    'Referer':
+                                                        'https://comic.naver.com',
+                                                  },
+                                                ),
+                                              ),
+                                              Text(
+                                                episode.title.length > 10
+                                                    ? "${episode.title.substring(0, 10)}..."
+                                                    : episode.title,
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .cardColor,
+                                                    fontSize: Theme.of(context)
+                                                        .textTheme
+                                                        .titleSmall!
+                                                        .fontSize,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              Icon(
+                                                Icons.chevron_right_outlined,
+                                                color:
+                                                    Theme.of(context).cardColor,
+                                              ),
                                             ],
                                           ),
                                         ),
