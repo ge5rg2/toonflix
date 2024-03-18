@@ -13,9 +13,20 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: HeaderContainer(header: "오늘의 웹툰"),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: AppBar(
+          elevation: 1,
+          shadowColor: Colors.black,
+          backgroundColor: Theme.of(context).cardColor,
+          foregroundColor: Theme.of(context).textTheme.displayLarge?.color,
+          title: Text("오늘의 웹툰",
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
+                fontWeight:
+                    Theme.of(context).textTheme.displayLarge?.fontWeight,
+              )),
+        ),
       ),
       body: FutureBuilder(
         future: webtoons,
