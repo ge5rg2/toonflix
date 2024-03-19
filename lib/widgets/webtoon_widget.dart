@@ -4,18 +4,21 @@ import 'package:toonflix/widgets/imageCard_widget.dart';
 
 class Webtoon extends StatelessWidget {
   final String title, thumb, id;
+  final Function onState;
 
   const Webtoon({
     super.key,
     required this.id,
     required this.title,
     required this.thumb,
+    required this.onState,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        onState();
         Navigator.push(
           context,
           MaterialPageRoute(
